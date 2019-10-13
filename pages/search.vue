@@ -66,10 +66,10 @@
    </v-expansion-panel-content>
    </v-expansion-panel>
    </v-expansion-panels>
-   <v-card class="d-flex row ma-2 bg2" width="100%">
-     <v-container  max-width="374" v-for=" ( n , index ) in  products " :key="index" >
-       <TheProduct  flat :story="n" />
-     </v-container>
+   <v-card class="d-flex justify-center flex-wrap ma-2">
+     <div  class="ma-3"  v-for=" ( n , index ) in  products " :key="index" >
+       <TheProduct class="ma-1" :story="n" />
+     </div>
    </v-card>
    </v-card>
  </v-card>
@@ -123,16 +123,14 @@ export default {
     },
     fetch_hotels() {
       let storyapi  = this.$storyapi();
-      var search = this.search != "" ? { "location": { "in" : this.search } } : {}
-      console.log(search);
+      var search = this.search != "" ? { "location": { "in" : this.search.toUpperCase() } } : {}
       storyapi.get('cdn/stories',{
         "starts_with": "hotel_offers/" ,
         "filter_query": search
 
       })
       .then(response => {
-        console.log(response.data.stories);
-        this.products = response.data.stories ;
+        this.products = this.products.concat(response.data.stories) ;
       }).catch(error => {
         console.log(error)
       })
@@ -145,12 +143,7 @@ export default {
           "filter_query": search
         })
         .then(response => {
-          console.log(response.data.stories);
-          if ( this.type == 0 ) {
-            this.products.concat(response.data.stories) ;
-          } else {
-            this.products = response.data.stories ;
-          }
+            this.products = this.products.concat(response.data.stories) ;
         }).catch(error => {
           console.log(error)
         })
